@@ -3,6 +3,7 @@
 import { updateAddress } from "../actions";
 import { Label } from "../../../../../components/label/Label";
 import { Input } from "../../../../../components/input/Input";
+import { GooglePlacesHtmlInput } from "../../../../../components/input/GooglePlacesHtmlInput";
 import {
   Select,
   SelectContent,
@@ -47,6 +48,7 @@ export function UpdateForm({
     >
       <fieldset className="flex flex-col gap-5">
         <input type="hidden" value={addressId} name="addressId" readOnly />
+        
         <div className="flex flex-col self-stretch">
           <p>
             <Label htmlFor="address_name">Address Name</Label>
@@ -56,12 +58,14 @@ export function UpdateForm({
               defaultValue={addressData.name}
               name="name"
               aria-label="Address Name"
+              placeholder="e.g., Home, Work, Office"
               required
             />
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-6">
-          <p className="sm:col-span-3">
+        
+        <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2">
+          <p>
             <Label htmlFor="first_name">First Name</Label>
             <Input
               id="first_name"
@@ -73,7 +77,7 @@ export function UpdateForm({
               required
             />
           </p>
-          <p className="sm:col-span-3">
+          <p>
             <Label htmlFor="last_name">Last Name</Label>
             <Input
               id="last_name"
@@ -85,122 +89,59 @@ export function UpdateForm({
               required
             />
           </p>
-          <div className="col-span-full">
-            <Label htmlFor="line_1">Street Address</Label>
-            <Input
-              id="line_1"
-              defaultValue={addressData.line_1}
-              type="text"
-              name="line_1"
-              autoComplete="shipping address-line-1"
-              aria-label="Street Address"
-            />
-          </div>
-          <div className="col-span-full">
-            <Label htmlFor="line_2">Extended Address</Label>
-            <Input
-              id="line_2"
-              defaultValue={addressData.line_2}
-              type="text"
-              name="line_2"
-              autoComplete="shipping address-line-2"
-              aria-label="Extended Address"
-            />
-          </div>
-          <div className="sm:col-span-2 sm:col-start-1">
-            <Label htmlFor="city">City</Label>
-            <Input
-              id="city"
-              defaultValue={addressData.city}
-              type="text"
-              name="city"
-              autoComplete="shipping city"
-              aria-label="City"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="county">County</Label>
-            <Input
-              id="county"
-              type="text"
-              defaultValue={addressData.county}
-              name="county"
-              autoComplete="shipping county"
-              aria-label="County"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="region">Region</Label>
-            <Input
-              id="region"
-              type="text"
-              defaultValue={addressData.region}
-              name="region"
-              autoComplete="shipping region"
-              aria-label="Region"
-            />
-          </div>
-
-          <div className="sm:col-span-2 sm:col-start-1">
-            <Label htmlFor="postcode">Postcode</Label>
-            <Input
-              id="postcode"
-              type="text"
-              defaultValue={addressData.postcode}
-              name="postcode"
-              autoComplete="shipping postcode"
-              aria-label="Postcode"
-              required
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="country">Country</Label>
-            <Select
-              name="country"
-              defaultValue={addressData.country}
-              autoComplete="shipping country"
-              aria-label="Country"
-              required
-            >
-              <SelectTrigger sizeKind="mediumUntilSm">
-                <SelectValue placeholder="Select a country" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {countries?.map((country) => (
-                  <SelectItem key={country.code} value={country.code}>
-                    {country.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="phone_number">Phone Number</Label>
-            <Input
-              id="phone_number"
-              type="text"
-              defaultValue={addressData.phone_number}
-              name="phone_number"
-              autoComplete="tel"
-              aria-label="Phone Number"
-            />
-          </div>
-          <div className="col-span-full">
-            <Label htmlFor="instructions">Additional Instructions</Label>
-            <Input
-              id="instructions"
-              defaultValue={addressData.instructions}
-              autoComplete="shippingAddress instructions"
-              type="text"
-              name="instructions"
-              aria-label="Additional Instructions"
-            />
-          </div>
         </div>
+
+        <div>
+          <Label htmlFor="line_1">Address</Label>
+          <GooglePlacesHtmlInput
+            id="line_1"
+            name="line_1"
+            placeholder="Start typing your address..."
+            autoComplete="shipping address-line-1"
+            aria-label="Address"
+            required
+          />
+          <p className="text-sm text-gray-600 mt-1">
+            Start typing to search for your address. City, state, and country will be updated automatically.
+          </p>
+        </div>
+
+        <div>
+          <Label htmlFor="phone_number">Phone Number</Label>
+          <Input
+            id="phone_number"
+            type="tel"
+            defaultValue={addressData.phone_number}
+            name="phone_number"
+            autoComplete="tel"
+            aria-label="Phone Number"
+            placeholder="Your phone number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="instructions">Additional Instructions (Optional)</Label>
+          <Input
+            id="instructions"
+            defaultValue={addressData.instructions}
+            type="text"
+            name="instructions"
+            aria-label="Additional Instructions"
+            placeholder="e.g., Ring doorbell, Leave at door, Apartment 2B"
+          />
+        </div>
+
+        {/* Hidden fields that will be populated by Google Places or retain existing values */}
+        <input type="hidden" name="line_2" defaultValue={addressData.line_2} />
+        <input type="hidden" name="city" defaultValue={addressData.city} />
+        <input type="hidden" name="county" defaultValue={addressData.county} />
+        <input type="hidden" name="region" defaultValue={addressData.region} />
+        <input type="hidden" name="postcode" defaultValue={addressData.postcode} />
+        <input type="hidden" name="country" defaultValue={addressData.country} />
       </fieldset>
       <div className="flex">
         <FormStatusButton variant="secondary" type="submit">
-          Save changes
+          Update Address
         </FormStatusButton>
       </div>
     </form>

@@ -7,7 +7,7 @@ import { BillingForm } from "./BillingForm";
 import { SubmitCheckoutButton } from "./SubmitCheckoutButton";
 import { CheckoutSidebar } from "./CheckoutSidebar";
 import { AccountDisplay } from "./AccountDisplay";
-import { ShippingSelector } from "./ShippingSelector";
+import { AccountAddressSelector } from "./AccountAddressSelector";
 import { ExpressCheckoutPaymentForm } from "./ExpressCheckoutPaymentForm";
 import { cookies } from "next/headers";
 import { cmsConfig } from "../../../lib/resolve-cms-env";
@@ -88,10 +88,7 @@ export async function AccountCheckout({
           </div>
           {!enableExpressCheckout && (
             <>
-              <div className="flex flex-col flex-1 gap-5">
-                <span className="text-2xl font-medium">Shipping address</span>
-                <ShippingSelector />
-              </div>
+              <AccountAddressSelector />
               <DeliveryForm />
               <PaymentForm
                 stripeCustomerId={stripeCustomerId}

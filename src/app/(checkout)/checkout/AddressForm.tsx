@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "../../../components/form/Form";
 import { Input } from "../../../components/input/Input";
+import { GooglePlacesInput } from "../../../components/input/GooglePlacesInput";
 import React from "react";
 import { useCountries } from "../../../hooks/use-countries";
 import {
@@ -127,15 +128,17 @@ export function AddressForm({
         <FormField
           control={control}
           name={`${addressField}.line_1`}
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Address</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
+                <GooglePlacesInput
+                  name={`${addressField}.line_1`}
+                  placeholder="Start typing your address..."
                   autoComplete={`${addressField === "shippingAddress" ? "shipping" : "billing"} address-line-1`}
                   aria-label="Address"
                   sizeKind="mediumUntilSm"
+                  addressField={addressField}
                   required
                 />
               </FormControl>

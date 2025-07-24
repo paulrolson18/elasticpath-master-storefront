@@ -2,6 +2,7 @@
 
 import { Label } from "../../../../../components/label/Label";
 import { Input } from "../../../../../components/input/Input";
+import { GooglePlacesHtmlInput } from "../../../../../components/input/GooglePlacesHtmlInput";
 import {
   Select,
   SelectContent,
@@ -25,12 +26,14 @@ export function AddAddressForm() {
             type="text"
             name="name"
             aria-label="Address Name"
+            placeholder="e.g., Home, Work, Office"
             required
           />
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-6">
-        <p className="sm:col-span-3">
+      
+      <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2">
+        <p>
           <Label htmlFor="first_name">First Name</Label>
           <Input
             id="first_name"
@@ -41,7 +44,7 @@ export function AddAddressForm() {
             required
           />
         </p>
-        <p className="sm:col-span-3">
+        <p>
           <Label htmlFor="last_name">Last Name</Label>
           <Input
             id="last_name"
@@ -52,89 +55,53 @@ export function AddAddressForm() {
             required
           />
         </p>
-        <p className="sm:col-span-3">
-          <Label htmlFor="line_1">Line 1</Label>
-          <Input
-            id="line_1"
-            type="text"
-            name="line_1"
-            autoComplete="shipping address-line-1"
-            aria-label="Street Address"
-          />
-        </p>
-        <p className="sm:col-span-3">
-          <Label htmlFor="line_2">Line 2</Label>
-          <Input
-            id="line_2"
-            type="text"
-            name="line_2"
-            autoComplete="shipping address-line-2"
-            aria-label="Extended Address"
-          />
-        </p>
-        <div className="sm:col-span-2 sm:col-start-1">
-          <Label htmlFor="city">City</Label>
-          <Input
-            id="city"
-            type="text"
-            name="city"
-            autoComplete="shipping city"
-            aria-label="City"
-          />
-        </div>
-        <div className="sm:col-span-2">
-          <Label htmlFor="county">County</Label>
-          <Input
-            id="county"
-            type="text"
-            name="county"
-            autoComplete="shipping county"
-            aria-label="County"
-          />
-        </div>
-        <div className="sm:col-span-2">
-          <Label htmlFor="region">Region</Label>
-          <Input
-            id="region"
-            type="text"
-            name="region"
-            autoComplete="shipping region"
-            aria-label="Region"
-          />
-        </div>
-
-        <div className="sm:col-span-2 sm:col-start-1">
-          <Label htmlFor="postcode">Postcode</Label>
-          <Input
-            id="postcode"
-            type="text"
-            name="postcode"
-            autoComplete="shipping postcode"
-            aria-label="Postcode"
-            required
-          />
-        </div>
-        <div className="sm:col-span-2">
-          <Label htmlFor="country">Country</Label>
-          <Select
-            name="country"
-            autoComplete="shipping country"
-            aria-label="Country"
-            required
-          >
-            <SelectTrigger sizeKind="mediumUntilSm">
-              <SelectValue placeholder="Select a country" />
-            </SelectTrigger>
-            <SelectContent className="bg-white">
-              {countries?.map((country) => (
-                <SelectItem key={country.code} value={country.code}>
-                  {country.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
       </div>
+
+      <div>
+        <Label htmlFor="line_1">Address</Label>
+        <GooglePlacesHtmlInput
+          id="line_1"
+          name="line_1"
+          placeholder="Start typing your address..."
+          autoComplete="shipping address-line-1"
+          aria-label="Address"
+          required
+        />
+        <p className="text-sm text-gray-600 mt-1">
+          Start typing to search for your address. City, state, and country will be filled automatically.
+        </p>
+      </div>
+
+      <div>
+        <Label htmlFor="phone_number">Phone Number</Label>
+        <Input
+          id="phone_number"
+          type="tel"
+          name="phone_number"
+          autoComplete="tel"
+          aria-label="Phone Number"
+          placeholder="Phone number"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="instructions">Additional Instructions (Optional)</Label>
+        <Input
+          id="instructions"
+          type="text"
+          name="instructions"
+          aria-label="Additional Instructions"
+          placeholder="e.g., Ring doorbell, Leave at door, Apartment 2B"
+        />
+      </div>
+
+      {/* Hidden fields that will be populated by Google Places */}
+      <input type="hidden" name="line_2" defaultValue="" />
+      <input type="hidden" name="city" defaultValue="" />
+      <input type="hidden" name="county" defaultValue="" />
+      <input type="hidden" name="region" defaultValue="" />
+      <input type="hidden" name="postcode" defaultValue="" />
+      <input type="hidden" name="country" defaultValue="US" />
     </fieldset>
   );
 }

@@ -117,10 +117,15 @@ export async function updateAddress(formData: FormData) {
 export async function addAddress(formData: FormData) {
   const client = getServerSideImplicitClient();
   const rawEntries = Object.fromEntries(formData.entries());
+  
+  // Debug logging to see what we're receiving
+  console.log("Raw form data entries:", rawEntries);
+  
   const validatedFormData = addAddressSchema.safeParse(rawEntries);
 
   if (!validatedFormData.success) {
-    console.error(JSON.stringify(validatedFormData.error));
+    console.error("Address validation failed:", JSON.stringify(validatedFormData.error));
+    console.error("Raw entries:", rawEntries);
     throw new Error("Invalid address submission");
   }
 
