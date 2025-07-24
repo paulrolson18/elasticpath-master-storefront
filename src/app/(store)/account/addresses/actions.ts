@@ -64,7 +64,7 @@ export async function deleteAddress(formData: FormData) {
       account: selectedAccount.account_id,
       address: addressId,
     });
-    revalidatePath("/accounts/addresses");
+    revalidatePath("/account/addresses");
   } catch (error) {
     console.error(error);
     throw new Error("Error deleting address");
@@ -107,11 +107,13 @@ export async function updateAddress(formData: FormData) {
       address: addressId,
       body: body,
     });
-    revalidatePath("/accounts/addresses");
   } catch (error) {
     console.error(error);
     throw new Error("Error updating address");
   }
+
+  revalidatePath("/account/addresses");
+  redirect("/account/addresses");
 }
 
 export async function addAddress(formData: FormData) {
@@ -146,18 +148,16 @@ export async function addAddress(formData: FormData) {
     ...addressData,
   };
 
-  let redirectUrl: string | undefined = undefined;
   try {
-    const result = (await client.AccountAddresses.Create({
+    await client.AccountAddresses.Create({
       account: selectedAccount.account_id,
       body: body,
-    })) as Resource<AccountAddress>;
-    redirectUrl = `/account/addresses/${result.data.id}`;
+    });
   } catch (error) {
     console.error(error);
     throw new Error("Error adding address");
   }
 
   revalidatePath("/account/addresses");
-  redirect(redirectUrl);
+  redirect("/account/addresses");
 }
