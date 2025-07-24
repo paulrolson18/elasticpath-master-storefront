@@ -69,7 +69,9 @@ export function GooglePlacesInput({
   }, [onChange]);
 
   useEffect(() => {
-    if (isLoaded && containerRef.current) {
+    if (!isLoaded || !containerRef.current) return;
+
+    try {
       const autocompleteElement = createAutocompleteElement(
         handlePlaceChanged,
         {
@@ -78,67 +80,83 @@ export function GooglePlacesInput({
         }
       );
 
-      if (autocompleteElement) {
-        autocompleteElementRef.current = autocompleteElement;
-        
-        // Style the autocomplete element to match the existing Input styles
-        autocompleteElement.style.width = "100%";
-        autocompleteElement.style.height = sizeKind === "medium" ? "2.75rem" : "3rem";
-        autocompleteElement.style.border = fieldError 
-          ? "1px solid rgb(239 68 68)" // red-500 for errors
-          : "1px solid rgb(209 213 219)"; // gray-300 for normal
-        autocompleteElement.style.borderRadius = "0.375rem";
-        autocompleteElement.style.padding = "0.5rem 0.75rem";
-        autocompleteElement.style.fontSize = "0.875rem";
-        autocompleteElement.style.lineHeight = "1.25rem";
-        
-        // Set the current value using setAttribute
-        if (value) {
-          autocompleteElement.setAttribute("value", value);
-        }
-        
-        if (required) {
-          autocompleteElement.setAttribute("required", "true");
-        }
-        
-        if (autoComplete) {
-          autocompleteElement.setAttribute("autocomplete", autoComplete);
-        }
-        
-        if (ariaLabel) {
-          autocompleteElement.setAttribute("aria-label", ariaLabel);
-        }
+      if (!autocompleteElement) return;
 
-        // Add input event listener to sync with React Hook Form
-        autocompleteElement.addEventListener("input", handleInputChange);
+      autocompleteElementRef.current = autocompleteElement;
+      
+      // Style the autocomplete element to match the existing Input styles
+      autocompleteElement.style.width = "100%";
+      autocompleteElement.style.height = sizeKind === "medium" ? "2.75rem" : "3rem";
+      autocompleteElement.style.border = fieldError 
+        ? "1px solid rgb(239 68 68)" // red-500 for errors
+        : "1px solid rgb(209 213 219)"; // gray-300 for normal
+      autocompleteElement.style.borderRadius = "0.375rem";
+      autocompleteElement.style.padding = "0.5rem 0.75rem";
+      autocompleteElement.style.fontSize = "0.875rem";
+      autocompleteElement.style.lineHeight = "1.25rem";
+      
+      // Set the current value using setAttribute
+      if (value) {
+        autocompleteElement.setAttribute("value", value);
+      }
+      
+      if (required) {
+        autocompleteElement.setAttribute("required", "true");
+      }
+      
+      if (autoComplete) {
+        autocompleteElement.setAttribute("autocomplete", autoComplete);
+      }
+      
+      if (ariaLabel) {
+        autocompleteElement.setAttribute("aria-label", ariaLabel);
+      }
 
-        // Clear container and add the element
+      // Add input event listener to sync with React Hook Form
+      autocompleteElement.addEventListener("input", handleInputChange);
+
+      // Clear container and add the element
+      if (containerRef.current) {
         containerRef.current.innerHTML = "";
         containerRef.current.appendChild(autocompleteElement);
+      }
 
-        return () => {
+      return () => {
+        try {
           if (autocompleteElement) {
             autocompleteElement.removeEventListener("input", handleInputChange);
           }
-          if (containerRef.current && autocompleteElement) {
+          if (containerRef.current && autocompleteElement && containerRef.current.contains(autocompleteElement)) {
             containerRef.current.removeChild(autocompleteElement);
           }
-        };
-      }
+          autocompleteElementRef.current = null;
+        } catch (cleanupError) {
+          console.warn("Error during GooglePlacesInput cleanup:", cleanupError);
+        }
+      };
+    } catch (err) {
+      console.error("Error setting up GooglePlacesInput:", err);
     }
-    return undefined;
-  }, [isLoaded, placeholder, sizeKind, required, autoComplete, ariaLabel, handlePlaceChanged, handleInputChange, value, fieldError]);
+  }, [isLoaded, placeholder, sizeKind, required, autoComplete, ariaLabel, handlePlaceChanged, handleInputChange, fieldError]);
 
   // Update the element value when React Hook Form value changes
   useEffect(() => {
-    if (autocompleteElementRef.current && autocompleteElementRef.current.getAttribute("value") !== value) {
-      autocompleteElementRef.current.setAttribute("value", value || "");
+    try {
+      if (autocompleteElementRef.current && autocompleteElementRef.current.getAttribute("value") !== value) {
+        autocompleteElementRef.current.setAttribute("value", value || "");
+      }
+    } catch (err) {
+      console.warn("Error updating GooglePlaces value:", err);
     }
   }, [value]);
 
   useEffect(() => {
     return () => {
-      cleanup();
+      try {
+        cleanup();
+      } catch (err) {
+        console.warn("Error during GooglePlaces cleanup:", err);
+      }
     };
   }, [cleanup]);
 

@@ -209,6 +209,74 @@ export function AccountAddressSelector() {
         </Button>
       </div>
 
+      {/* Address Selection Dropdown */}
+      {accountAddresses.length > 0 && (
+        <div className="w-full">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select an address
+          </label>
+          <Select value={selectedAddressId} onValueChange={handleAddressChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Choose an address" />
+            </SelectTrigger>
+            <SelectContent>
+              {accountAddresses.map((address) => (
+                <SelectItem key={address.id} value={address.id}>
+                  <div className="flex flex-col">
+                    <span className="font-medium">
+                      {address.first_name} {address.last_name}
+                    </span>
+                    <span className="text-sm text-gray-600">
+                      {address.line_1}
+                      {address.line_2 && `, ${address.line_2}`}
+                      {address.city && `, ${address.city}`}
+                      {address.region && `, ${address.region}`}
+                      {address.postcode && ` ${address.postcode}`}
+                    </span>
+                  </div>
+                </SelectItem>
+              ))}
+              <SelectItem value="new">
+                <span className="font-medium text-blue-600">+ Add New Address</span>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
+      {/* Selected Address Details */}
+      {selectedAddressId && selectedAddressId !== "new" && (
+        <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Selected Address:</h3>
+          {(() => {
+            const selectedAddress = accountAddresses.find(addr => addr.id === selectedAddressId);
+            if (!selectedAddress) return null;
+            
+            return (
+              <div className="text-sm text-gray-600">
+                <div className="font-medium text-gray-900">
+                  {selectedAddress.first_name} {selectedAddress.last_name}
+                </div>
+                {selectedAddress.company_name && (
+                  <div>{selectedAddress.company_name}</div>
+                )}
+                <div>{selectedAddress.line_1}</div>
+                {selectedAddress.line_2 && <div>{selectedAddress.line_2}</div>}
+                <div>
+                  {selectedAddress.city}
+                  {selectedAddress.region && `, ${selectedAddress.region}`}
+                  {selectedAddress.postcode && ` ${selectedAddress.postcode}`}
+                </div>
+                <div>{selectedAddress.country}</div>
+                {selectedAddress.phone_number && (
+                  <div>Phone: {selectedAddress.phone_number}</div>
+                )}
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
       {/* Dialog for new address form */}
       <Dialog
         open={isSheetOpen}

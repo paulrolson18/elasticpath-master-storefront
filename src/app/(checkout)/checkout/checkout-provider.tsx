@@ -216,11 +216,9 @@ export function CheckoutProvider({ children, cart }: CheckoutProviderProps) {
           ? state?.meta?.display_price?.with_tax?.amount
           : 100,
     capture_method: "automatic",
-    payment_method_types: ["card"],
     appearance: {
       theme: "stripe",
     },
-    paymentMethodCreation: "manual",
   };
 
   return (
