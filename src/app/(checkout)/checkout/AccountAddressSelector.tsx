@@ -58,8 +58,6 @@ export function AccountAddressSelector() {
       const firstAddress = accountAddresses[0];
       setSelectedAddressId(firstAddress.id);
       updateFormWithAddress(firstAddress);
-    } else if (accountAddresses.length === 0) {
-      setIsSheetOpen(true);
     }
     setIsLoading(false);
   }, [accountAddresses, selectedAddressId]);
