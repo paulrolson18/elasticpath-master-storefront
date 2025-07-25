@@ -172,7 +172,7 @@ export function CheckoutAddressForm({ onAddressAdded, onCancel }: CheckoutAddres
       </fieldset>
       <div className="flex gap-2">
         {onCancel && (
-          <FormStatusButton variant="outline" type="button" onClick={onCancel}>
+          <FormStatusButton variant="secondary" type="button" onClick={onCancel}>
             Cancel
           </FormStatusButton>
         )}
