@@ -7,7 +7,7 @@ import { useAuthedAccountMember } from "../../../react-shopper-hooks";
 import { getEpccImplicitClient } from "../../../lib/epcc-implicit-client";
 import { AccountAddress } from "@elasticpath/js-sdk";
 import { Button } from "../../../components/button/Button";
-import { AddressForm } from "./AddressForm";
+import { CheckoutAddressForm } from "./CheckoutAddressForm";
 import {
   Select,
   SelectContent,
@@ -110,84 +110,10 @@ export function AccountAddressSelector() {
     }
   };
 
-  const handleSaveNewAddress = async () => {
-    if (!selectedAccountToken?.account_id) {
-      toast.error("No account found");
-      return;
-    }
-
-    const formValues = getValues();
-    const shippingAddress = formValues.shippingAddress;
-
-    if (
-      !shippingAddress?.first_name ||
-      !shippingAddress?.line_1 ||
-      !shippingAddress?.city ||
-      !shippingAddress?.postcode ||
-      !shippingAddress?.country
-    ) {
-      toast.error("Please fill in all required address fields");
-      return;
-    }
-
-    try {
-      const newAddress = await client.AccountAddresses.Create({
-        account: selectedAccountToken.account_id,
-        body: {
-          type: "account-address",
-          first_name: shippingAddress.first_name,
-          last_name: shippingAddress.last_name || "",
-          company_name: shippingAddress.company_name || "",
-          line_1: shippingAddress.line_1,
-          line_2: shippingAddress.line_2 || "",
-          city: shippingAddress.city,
-          county: shippingAddress.county || "",
-          region: shippingAddress.region || "",
-          postcode: shippingAddress.postcode,
-          country: shippingAddress.country,
-          phone_number: shippingAddress.phone_number || "",
-          instructions: shippingAddress.instructions || "",
-        },
-      });
-
-      // Add the new address to the list
-      queryClient.setQueryData(
-        selectedAccountToken?.account_id
-          ? [
-              ...accountAddressesQueryKeys.list({
-                accountId: selectedAccountToken.account_id,
-              }),
-            ]
-          : ["no-account"],
-        (oldData: any) => {
-          if (oldData.data) {
-            return {
-              ...oldData,
-              data: [...oldData.data, newAddress.data],
-            };
-          }
-          return { data: [newAddress.data] };
-        },
-      );
-
-      // Invalidate the query to ensure all components are refreshed
-      await queryClient.invalidateQueries({
-        queryKey: selectedAccountToken?.account_id
-          ? [
-              ...accountAddressesQueryKeys.list({
-                accountId: selectedAccountToken.account_id,
-              }),
-            ]
-          : ["no-account"],
-      });
-
-      setSelectedAddressId(newAddress.data.id);
-      setIsSheetOpen(false);
-      toast.success("Address saved successfully");
-    } catch (error) {
-      console.error("Error saving address:", error);
-      toast.error("Failed to save address");
-    }
+  const handleAddressAdded = (newAddress: AccountAddress) => {
+    setSelectedAddressId(newAddress.id);
+    updateFormWithAddress(newAddress);
+    setIsSheetOpen(false);
   };
 
   if (isLoading) {
@@ -288,19 +214,11 @@ export function AccountAddressSelector() {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <Dialog.Panel className="mx-auto max-w-4xl max-h-[90vh] overflow-y-auto rounded-lg bg-white p-6">
             <div className="space-y-4">
-              <AddressForm addressField="shippingAddress" />
-              <div className="flex justify-end space-x-2">
-                <Button
-                  variant="secondary"
-                  size="small"
-                  onClick={() => setIsSheetOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button size="small" onClick={handleSaveNewAddress}>
-                  Save Address
-                </Button>
-              </div>
+              <h2 className="text-2xl font-medium">Add New Address</h2>
+              <CheckoutAddressForm 
+                onAddressAdded={handleAddressAdded}
+                onCancel={() => setIsSheetOpen(false)}
+              />
             </div>
           </Dialog.Panel>
         </div>
