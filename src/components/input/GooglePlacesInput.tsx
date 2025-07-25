@@ -69,7 +69,9 @@ export function GooglePlacesInput({
   }, [onChange]);
 
   useEffect(() => {
-    if (!isLoaded || !containerRef.current) return;
+    if (!isLoaded || !containerRef.current) {
+      return;
+    }
 
     try {
       const autocompleteElement = createAutocompleteElement(
