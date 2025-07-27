@@ -43,8 +43,14 @@ export function GooglePlacesHtmlInput({
       parsedAddress.country = "US"; // Default fallback
     }
     
-    console.log("Processing address from Google Places:", parsedAddress);
-    console.log("line_1 value:", parsedAddress.line_1, "type:", typeof parsedAddress.line_1);
+    console.log("🏠 Processing address from Google Places:", parsedAddress);
+    console.log("📍 Address details:", {
+      line_1: parsedAddress.line_1,
+      city: parsedAddress.city,
+      region: parsedAddress.region,
+      postcode: parsedAddress.postcode,
+      country: parsedAddress.country
+    });
 
     // Update the hidden input that will be submitted with the form
     if (hiddenInputRef.current) {
@@ -59,40 +65,49 @@ export function GooglePlacesHtmlInput({
 
     // Get the form and update related fields
     const form = containerRef.current?.closest('form');
+    console.log("📋 Form found:", !!form);
+    
     if (form) {
       const fields = {
         line_1: parsedAddress.line_1,
         line_2: parsedAddress.line_2,
         city: parsedAddress.city,
         region: parsedAddress.region,
-        county: parsedAddress.region, // Some forms use county instead of region
+        county: parsedAddress.county || parsedAddress.region, // Some forms use county instead of region
         country: parsedAddress.country,
         postcode: parsedAddress.postcode,
       };
 
+      console.log("🔧 Fields to update:", fields);
+
       Object.entries(fields).forEach(([fieldName, value]) => {
         const field = form.querySelector(`[name="${fieldName}"]`) as HTMLInputElement | HTMLSelectElement;
-        console.log(`Setting field ${fieldName}:`, value, "type:", typeof value);
+        console.log(`🎯 Setting field ${fieldName}:`, value, "field found:", !!field);
         if (field) {
           if (field.tagName === 'SELECT') {
             // For select elements, find the option with matching value
             const option = field.querySelector(`option[value="${value}"]`) as HTMLOptionElement;
             if (option) {
               field.value = value;
+              console.log(`✅ Select field ${fieldName} set to:`, field.value);
               // Trigger change event for select elements
               field.dispatchEvent(new Event('change', { bubbles: true }));
+            } else {
+              console.log(`❌ Option not found for ${fieldName} value:`, value);
             }
           } else {
             const fieldValue = (value !== undefined && value !== null) ? String(value) : '';
             field.value = fieldValue;
-            console.log(`Field ${fieldName} set to:`, fieldValue);
+            console.log(`✅ Input field ${fieldName} set to:`, field.value);
             // Trigger input event for input elements
             field.dispatchEvent(new Event('input', { bubbles: true }));
           }
         } else {
-          console.log(`Field ${fieldName} not found in form`);
+          console.log(`❌ Field ${fieldName} not found in form`);
         }
       });
+    } else {
+      console.log("❌ No form found");
     }
     
     // Call the callback if provided

@@ -313,7 +313,7 @@ export function useGooglePlaces() {
                         
                         if (place.address_components) {
                           console.log("🎉 FOUND address_components from Places API!");
-                          const parsedAddress = parseAddressComponents(place.address_components, place.formatted_address);
+                          const parsedAddress = parseAddressComponents(place.address_components as unknown as google.maps.places.AddressComponent[], place.formatted_address);
                           onPlaceChanged(parsedAddress);
                           return;
                         } else if (place.place_id) {
@@ -332,7 +332,7 @@ export function useGooglePlaces() {
                             if (detailsStatus === google.maps.places.PlacesServiceStatus.OK && detailsResult) {
                               if (detailsResult.address_components) {
                                 console.log("🎉 FOUND address_components from getDetails!");
-                                const parsedAddress = parseAddressComponents(detailsResult.address_components, detailsResult.formatted_address);
+                                const parsedAddress = parseAddressComponents(detailsResult.address_components as unknown as google.maps.places.AddressComponent[], detailsResult.formatted_address);
                                 onPlaceChanged(parsedAddress);
                                 return;
                               }
@@ -377,8 +377,8 @@ export function useGooglePlaces() {
         }
         
         // Monitor the predictions and place properties more aggressively
-        let lastPredictions = null;
-        let lastPlace = null;
+        let lastPredictions: any = null;
+        let lastPlace: any = null;
         let lastInputValue = "";
         
         const monitorGooglePlaces = () => {

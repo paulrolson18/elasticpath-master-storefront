@@ -138,6 +138,7 @@ export function GooglePlacesInput({
       };
     } catch (err) {
       console.error("Error setting up GooglePlacesInput:", err);
+      return;
     }
   }, [isLoaded, placeholder, sizeKind, required, autoComplete, ariaLabel, handlePlaceChanged, handleInputChange, fieldError]);
 

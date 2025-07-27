@@ -33,9 +33,32 @@ export function CheckoutAddressForm({ onAddressAdded, onCancel }: CheckoutAddres
 
     const entries = Object.fromEntries(formData.entries());
     
-    // Validate required fields
-    if (!entries.first_name || !entries.line_1 || !entries.city || !entries.postcode || !entries.country) {
-      toast.error("Please fill in all required fields");
+    // Debug logging to see what we're receiving
+    console.log("Checkout form data entries:", entries);
+    
+    // Validate required fields (based on shippingAddressSchema + name)
+    if (!entries.name || !entries.first_name || !entries.last_name || !entries.line_1 || !entries.city || !entries.region || !entries.postcode || !entries.country) {
+      console.error("Missing required fields:", {
+        name: !!entries.name,
+        first_name: !!entries.first_name,
+        last_name: !!entries.last_name,
+        line_1: !!entries.line_1, 
+        city: !!entries.city,
+        region: !!entries.region,
+        postcode: !!entries.postcode,
+        country: !!entries.country
+      });
+      const missingFields = [];
+      if (!entries.name) missingFields.push("Address Name");
+      if (!entries.first_name) missingFields.push("First Name");
+      if (!entries.last_name) missingFields.push("Last Name");
+      if (!entries.line_1) missingFields.push("Address");
+      if (!entries.city) missingFields.push("City");
+      if (!entries.region) missingFields.push("Region/State");
+      if (!entries.postcode) missingFields.push("Postcode");
+      if (!entries.country) missingFields.push("Country");
+      
+      toast.error(`Please fill in all required fields: ${missingFields.join(", ")}`);
       return;
     }
 

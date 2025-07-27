@@ -54,12 +54,29 @@ export default async function Addresses() {
                     {address.name}
                   </p>
                 </div>
-                <div className="mt-1 flex flex-col gap-x-2 text-xs leading-5 text-gray-500">
-                  <p className="whitespace-nowrap">
+                <div className="mt-1 flex flex-col gap-y-1 text-xs leading-5 text-gray-500">
+                  <p>
                     {address.first_name} {address.last_name}
+                    {address.company_name && (
+                      <span className="text-gray-400"> • {address.company_name}</span>
+                    )}
                   </p>
-                  <p className="whitespace-nowrap">{address.line_1}</p>
-                  <p className="whitespace-nowrap">{address.postcode}</p>
+                  <p>{address.line_1}</p>
+                  {address.line_2 && <p>{address.line_2}</p>}
+                  <p>
+                    {address.city}
+                    {address.region && `, ${address.region}`}
+                    {address.postcode && ` ${address.postcode}`}
+                  </p>
+                  {address.country && (
+                    <p className="text-gray-400">{address.country}</p>
+                  )}
+                  {address.phone_number && (
+                    <p className="text-gray-400">Phone: {address.phone_number}</p>
+                  )}
+                  {address.instructions && (
+                    <p className="text-gray-400 italic">"{address.instructions}"</p>
+                  )}
                 </div>
               </div>
               <div className="flex flex-none items-center gap-x-4">
