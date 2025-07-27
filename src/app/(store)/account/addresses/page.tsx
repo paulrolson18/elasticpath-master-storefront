@@ -75,7 +75,7 @@ export default async function Addresses() {
                     <p className="text-gray-400">Phone: {address.phone_number}</p>
                   )}
                   {address.instructions && (
-                    <p className="text-gray-400 italic">"{address.instructions}"</p>
+                    <p className="text-gray-400 italic">&ldquo;{address.instructions}&rdquo;</p>
                   )}
                 </div>
               </div>

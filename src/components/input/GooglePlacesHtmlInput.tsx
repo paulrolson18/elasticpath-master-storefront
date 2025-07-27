@@ -73,7 +73,7 @@ export function GooglePlacesHtmlInput({
         line_2: parsedAddress.line_2,
         city: parsedAddress.city,
         region: parsedAddress.region,
-        county: parsedAddress.county || parsedAddress.region, // Some forms use county instead of region
+        county: parsedAddress.region, // Some forms use county instead of region
         country: parsedAddress.country,
         postcode: parsedAddress.postcode,
       };

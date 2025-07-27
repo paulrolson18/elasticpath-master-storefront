@@ -593,7 +593,7 @@ export function useGooglePlaces() {
   };
 
   const parseAddressComponents = (
-    components: google.maps.places.AddressComponent[],
+    components: any[],
     formattedAddress?: string
   ): ParsedAddress => {
     const addressComponents: AddressComponents = {};
