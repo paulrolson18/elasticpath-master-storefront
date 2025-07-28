@@ -30,7 +30,7 @@ export function useGooglePlaces() {
 
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
-    console.log("Google Places API Key:", apiKey ? "Set (length: " + apiKey.length + ")" : "Not set");
+    //console.log("Google Places API Key:", apiKey ? "Set (length: " + apiKey.length + ")" : "Not set");
     
     if (!apiKey) {
       setError("Google Places API key is not configured");
@@ -97,7 +97,7 @@ export function useGooglePlaces() {
       }
 
       // Add event listener for place selection
-      console.log("Adding event listener to autocomplete element:", autocompleteElement);
+      //console.log("Adding event listener to autocomplete element:", autocompleteElement);
       
       // Try multiple event patterns to catch the place selection
       const eventTypes = [
@@ -110,11 +110,11 @@ export function useGooglePlaces() {
       
       eventTypes.forEach(eventType => {
         autocompleteElement.addEventListener(eventType, (event: any) => {
-          console.log(`${eventType} event fired:`, event);
+          //console.log(`${eventType} event fired:`, event);
           const place = event.detail?.place || event.place || event.target?.place;
           if (place) {
-            console.log("Place object:", place);
-            console.log("Place properties:", Object.keys(place));
+            //console.log("Place object:", place);
+            //console.log("Place properties:", Object.keys(place));
             
             if (place.addressComponents) {
               console.log("Using addressComponents");
@@ -139,7 +139,7 @@ export function useGooglePlaces() {
 
       // Try to access the internal input element via the inputElement property
       setTimeout(() => {
-        console.log("Trying to access inputElement property...");
+        //console.log("Trying to access inputElement property...");
         
         // Try different ways to access the inputElement
         let inputElement = (autocompleteElement as any).inputElement;
@@ -147,7 +147,7 @@ export function useGooglePlaces() {
         if (!inputElement) {
           // Try accessing it from different properties
           const props = Object.getOwnPropertyNames(autocompleteElement);
-          console.log("All properties:", props);
+          //console.log("All properties:", props);
           
           for (const prop of props) {
             const value = (autocompleteElement as any)[prop];
@@ -160,11 +160,11 @@ export function useGooglePlaces() {
         }
         
         if (inputElement) {
-          console.log("Found inputElement:", inputElement);
+          //console.log("Found inputElement:", inputElement);
           
           // Listen for input events on the internal input
           inputElement.addEventListener('input', (event: any) => {
-            console.log("Internal inputElement event:", event.target.value);
+            //console.log("Internal inputElement event:", event.target.value);
             
             // Try to get the current place if available
             const currentPlace = (autocompleteElement as any).place;
@@ -444,31 +444,31 @@ export function useGooglePlaces() {
         setInterval(monitorGooglePlaces, 200);
         
         // Test if the autocomplete element has any methods or properties we can use
-        console.log("Autocomplete element properties:", Object.getOwnPropertyNames(autocompleteElement));
-        console.log("Autocomplete element prototype:", Object.getOwnPropertyNames(Object.getPrototypeOf(autocompleteElement)));
+        //console.log("Autocomplete element properties:", Object.getOwnPropertyNames(autocompleteElement));
+        //console.log("Autocomplete element prototype:", Object.getOwnPropertyNames(Object.getPrototypeOf(autocompleteElement)));
         
         // Test if the element has a value property
-        console.log("Autocomplete element value:", (autocompleteElement as any).value);
-        console.log("Autocomplete element textContent:", autocompleteElement.textContent);
+        //console.log("Autocomplete element value:", (autocompleteElement as any).value);
+        //console.log("Autocomplete element textContent:", autocompleteElement.textContent);
         
         // Try accessing some of the other properties we saw
-        console.log("sessionToken:", (autocompleteElement as any).sessionToken);
-        console.log("predictions:", (autocompleteElement as any).predictions);
+        //console.log("sessionToken:", (autocompleteElement as any).sessionToken);
+        //console.log("predictions:", (autocompleteElement as any).predictions);
       }, 2000); // Increased timeout to give Google Places more time to initialize
 
       // Also try listening on the autocomplete element itself
       autocompleteElement.addEventListener("input", (event: any) => {
-        console.log("Input event on autocomplete:", event.target.value);
+        //console.log("Input event on autocomplete:", event.target.value);
       });
 
       autocompleteElement.addEventListener("change", (event: any) => {
-        console.log("Change event on autocomplete:", event.target.value);
+        //console.log("Change event on autocomplete:", event.target.value);
       });
 
       // Try listening for all events to see what's available
       ['click', 'focus', 'blur', 'select', 'keydown', 'keyup'].forEach(eventType => {
         autocompleteElement.addEventListener(eventType, (event: any) => {
-          console.log(`${eventType} event on autocomplete:`, event);
+          //console.log(`${eventType} event on autocomplete:`, event);
           
           // On certain events, try to check if a place has been selected
           if (['click', 'keydown'].includes(eventType)) {
@@ -478,9 +478,9 @@ export function useGooglePlaces() {
               const inputElement = (autocompleteElement as any).inputElement;
               const inputValue = inputElement?.value;
               
-              console.log(`After ${eventType} - place:`, place);
-              console.log(`After ${eventType} - value:`, value);
-              console.log(`After ${eventType} - inputValue:`, inputValue);
+              //console.log(`After ${eventType} - place:`, place);
+              //console.log(`After ${eventType} - value:`, value);
+              //console.log(`After ${eventType} - inputValue:`, inputValue);
               
               if (place && place.addressComponents) {
                 console.log("🎉 Found place with addressComponents after", eventType);
@@ -602,10 +602,10 @@ export function useGooglePlaces() {
       const types = component.types;
       
       // Debug each component to understand the structure
-      console.log("Processing component:", component);
-      console.log("Component types:", types);
-      console.log("Component long_name:", component.long_name);
-      console.log("Component short_name:", component.short_name);
+      //console.log("Processing component:", component);
+      //console.log("Component types:", types);
+      //console.log("Component long_name:", component.long_name);
+      //console.log("Component short_name:", component.short_name);
       
       if (types.includes("street_number")) {
         addressComponents.street_number = component.long_name || component.short_name || undefined;
@@ -662,7 +662,7 @@ export function useGooglePlaces() {
     };
 
     // Debug logging to help identify issues
-    console.log("Google Places raw components:", components);
+    //console.log("Google Places raw components:", components);
     console.log("Parsed address components:", addressComponents);
     console.log("Final parsed address:", parsedAddress);
 
