@@ -64,7 +64,7 @@ export async function deleteAddress(formData: FormData) {
       account: selectedAccount.account_id,
       address: addressId,
     });
-    revalidatePath("/accounts/addresses");
+    revalidatePath("/account/addresses");
   } catch (error) {
     console.error(error);
     throw new Error("Error deleting address");
